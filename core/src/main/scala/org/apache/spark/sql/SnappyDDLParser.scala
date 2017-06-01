@@ -145,6 +145,7 @@ abstract class SnappyDDLParser(session: SnappySession)
   final def UNCACHE: Rule0 = rule { keyword(Consts.UNCACHE) }
   final def USING: Rule0 = rule { keyword(Consts.USING) }
   final def RETURNS: Rule0 = rule { keyword(Consts.RETURNS) }
+  final def FN: Rule0 = rule { keyword(Consts.FN) }
 
   // Window analytical functions (non-reserved)
   final def DURATION: Rule0 = rule { keyword(Consts.DURATION) }
@@ -293,9 +294,9 @@ abstract class SnappyDDLParser(session: SnappySession)
             .getOrElse(Map.empty[String, String])
         val options = indexType.asInstanceOf[Option[Boolean]] match {
           case Some(false) =>
-            parameters + (ExternalStoreUtils.INDEX_TYPE -> "unique")
-          case Some(true) =>
             parameters + (ExternalStoreUtils.INDEX_TYPE -> "global hash")
+          case Some(true) =>
+            parameters + (ExternalStoreUtils.INDEX_TYPE -> "unique")
           case None => parameters
         }
         CreateIndex(indexName, tableName, cols, options)
